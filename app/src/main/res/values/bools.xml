@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="mobile_api_bigger_than_24">false</bool>
+    <bool name="mobile_api_smaller_than_21">true</bool>
+    <bool name="mobile_api_bigger_than_21">false</bool>
+</resources>
