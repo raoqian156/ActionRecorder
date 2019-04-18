@@ -36,8 +36,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="landscape" />
 
-        <service
-            android:name=".copy.WatchingService" />
+        <service android:name=".copy.WatchingService" />
         <service
             android:name=".copy.WatchingService21"
             android:description="@string/app_name"
@@ -78,7 +77,10 @@
                 <action android:name="com.willme.topactivity.ACTION_NOTIFICATION_RECEIVER" />
             </intent-filter>
         </receiver>
-
+        <activity
+            android:name=".app_unlock_clock.UnlockCLockActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            android:launchMode="singleInstance" />
         <!--<activity android:name=".PermissionsActivity"></activity>-->
     </application>
 

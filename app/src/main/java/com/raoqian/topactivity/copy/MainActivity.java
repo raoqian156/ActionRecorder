@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.raoqian.topactivity.R;
 import com.raoqian.topactivity.TongJiActivity;
+import com.raoqian.topactivity.app_unlock_clock.UnlockCLockActivity;
 
 import static com.raoqian.topactivity.utils.CrashHandler.TAG;
 
@@ -43,7 +44,7 @@ public class MainActivity extends Activity {
             startActivity(intent);
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             new AlertDialog.Builder(this)
-                    .setMessage("安卓5.0以后需要获取权限")
+                    .setMessage("安卓5.0以后需要获取权限\n请手动打开应用 "+getString(R.string.app_name)+" 无障碍服务")
                     .setPositiveButton("前去设置"
                             , new DialogInterface.OnClickListener() {
                                 @Override
@@ -121,6 +122,10 @@ public class MainActivity extends Activity {
 
     public void onShow(View view) {
         startActivity(new Intent(this, TongJiActivity.class));
+    }
+
+    public void onOpenUnlock(View view) {
+        startActivity(new Intent(this, UnlockCLockActivity.class));
     }
 //
 //    @Override

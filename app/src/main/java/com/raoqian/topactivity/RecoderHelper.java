@@ -2,9 +2,11 @@ package com.raoqian.topactivity;
 
 import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
+import com.raoqian.topactivity.app_unlock_clock.UnlockCLockActivity;
 import com.raoqian.topactivity.bean.UseAppInfoBean;
 import com.raoqian.topactivity.utils.FileHelper;
 
