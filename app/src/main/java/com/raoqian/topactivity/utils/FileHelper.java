@@ -1,6 +1,5 @@
 package com.raoqian.topactivity.utils;
 
-import android.content.Context;
 import android.util.Log;
 
 import java.io.FileInputStream;
@@ -11,15 +10,9 @@ import java.io.FileOutputStream;
  */
 
 public class FileHelper {
-    private Context mContext;
 
     //空参数构造函数，传入的值为空时，不出错
     public FileHelper() {
-    }
-
-    public FileHelper(Context mContext) {
-        super();
-        this.mContext = mContext;
     }
 
 
@@ -35,7 +28,7 @@ public class FileHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("FileHelper", "writeFileSdcardFile");
+            Log.d("FileHelper", "writeFileSdcardFile");
         }
     }
 

@@ -23,7 +23,7 @@ public class InfoController {
     public static void dataInput(Application context, String pageName) {
         long timeZoom = System.currentTimeMillis();
         save((BaseApplication) context, pageName, timeZoom);
-        Log.e("InfoController", "30");
+        Log.d("InfoController", "30");
     }
 
     private static void save(BaseApplication application, String pageName, long timeZoom) {
@@ -51,13 +51,13 @@ public class InfoController {
             PackageManager packageManager = context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(pageName, 0);
             String result = packageInfo.applicationInfo.loadLabel(packageManager).toString();
-            Log.e("InfoController", "result = " + result);
+            Log.d("InfoController", "result = " + result);
             return result;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
-            Log.e("InfoController", "无法获取" + pageName + "应用名");
+            Log.d("InfoController", "无法获取" + pageName + "应用名");
         }
         return null;
     }

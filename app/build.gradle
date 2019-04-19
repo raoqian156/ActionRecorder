@@ -22,12 +22,19 @@ android {
         targetSdkVersion 25
         versionCode 12
         versionName "1.4.1"
+        jackOptions {
+            enabled true
+        }
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 

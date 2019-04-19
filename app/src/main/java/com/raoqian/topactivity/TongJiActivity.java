@@ -59,11 +59,13 @@ public class TongJiActivity extends Activity {
         }
 
         @Override
-        public void onBindingHolder(BaseHolder holder, int position) {
-            ((TestShowHolder) holder).mName.setText(getDataItem(position).getNickName());
-            ((TestShowHolder) holder).mStartTime.setText(TimeParse.stampToDate(getDataItem(position).getStartTime() + ""));
-            ((TestShowHolder) holder).mEndTime.setText(TimeParse.stampToDate(getDataItem(position).getEndTime() + ""));
-            ((TestShowHolder) holder).mUsingTime.setText((getDataItem(position).getEndTime() - getDataItem(position).getStartTime()) / 1000 + "秒");
+        public void onBindingHolder(BaseHolder holder, int position, UseAppInfoBean data) {
+            ((TestShowHolder) holder).mName.setText(data.getNickName());
+            ((TestShowHolder) holder).mStartTime.setText(TimeParse.stampToDate(data.getStartTime() + ""));
+            if (data.getEndTime() > 0) {
+                ((TestShowHolder) holder).mEndTime.setText(TimeParse.stampToDate(data.getEndTime() + ""));
+            }
+            ((TestShowHolder) holder).mUsingTime.setText(data.getShowUsingTime());
         }
     }
 

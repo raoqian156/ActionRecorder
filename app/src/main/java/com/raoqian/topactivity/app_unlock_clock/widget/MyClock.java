@@ -5,22 +5,23 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by raoqian on 2019/4/10.
  */
 
-public class MyClock extends View implements View.OnClickListener {
+public class MyClock extends View {
     public MyClock(Context context) {
         this(context, null, 0);
     }
@@ -37,7 +38,6 @@ public class MyClock extends View implements View.OnClickListener {
         mPaint.setTextSize(60);
         mPaint.getTextBounds(mText, 0, mText.length(), mBound);
         time = System.currentTimeMillis();
-        setOnClickListener(this);
     }
 
     long time = 0;
@@ -135,22 +135,10 @@ public class MyClock extends View implements View.OnClickListener {
     }
 
     @Override
-    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
-        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-        Log.e("MyClock.LINE", "154 onFocusChanged " + gainFocus);
-    }
-
-    @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
         isRunning = hasWindowFocus;
         Log.e("MyClock", "onWindowFocusChanged.hasWindowFocus = " + hasWindowFocus);
-    }
-
-    @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-        Log.e("MyClock.LINE", "onVisibilityChanged " + (visibility == View.VISIBLE));
     }
 
     @Override
@@ -161,15 +149,29 @@ public class MyClock extends View implements View.OnClickListener {
         drawTextAndLine(canvas);
         canvas.drawCircle(mX, mY, 10, mPaint);
         drawTime(canvas);
-        Log.e("MyClock.LINE", "164 isRunning = " + isRunning);
         if (isRunning) {
             postInvalidateDelayed(200);
         }
 
     }
 
+    static List<TimeWatcher> watchers = new ArrayList<>();
+
+    public interface TimeWatcher {
+        void onTimeChange(long time);
+    }
+
+    public static void addTimeWatcher(TimeWatcher watcher) {
+        watchers.add(watcher);
+    }
+
+    public static boolean removeTimeWatcher(TimeWatcher w) {
+        return watchers.remove(w);
+    }
+
+    SimpleDateFormat format = new SimpleDateFormat("yyyy - MM - dd\nHH:mm:ss", Locale.CHINA);
+
     private void drawRunningText(Canvas canvas) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy - MM - dd\nHH:mm:ss", Locale.CHINA);
         String time = format.format(new Date());
         mPaint.setColor(Color.WHITE);
         mPaint.setTextSize(60);
@@ -180,6 +182,11 @@ public class MyClock extends View implements View.OnClickListener {
         int hour = Calendar.getInstance().get(Calendar.HOUR);
         int min = Calendar.getInstance().get(Calendar.MINUTE);
         int second = Calendar.getInstance().get(Calendar.SECOND);
+        if (second % 5 == 0) {
+            for (TimeWatcher watcher : watchers) {
+                watcher.onTimeChange(Calendar.getInstance().getTimeInMillis());
+            }
+        }
         int secondDegree = (int) (second / 60F * 360);
         int minDegree = (int) (min / 60F * 360);
         int hourDegree = (int) (hour / 12F * 360 + min / 2);
@@ -251,9 +258,4 @@ public class MyClock extends View implements View.OnClickListener {
 
 
     volatile boolean isRunning = true;
-
-    @Override
-    public void onClick(View v) {
-        isRunning = !isRunning;
-    }
 }

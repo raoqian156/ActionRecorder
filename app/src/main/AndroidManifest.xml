@@ -8,6 +8,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <user-permission android:name="android.permission.DEVICE_POWER"/>
+
+    <!-- 配置权限 -->
+    <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
 
     <application
         android:name=".BaseApplication"
@@ -77,11 +82,34 @@
                 <action android:name="com.willme.topactivity.ACTION_NOTIFICATION_RECEIVER" />
             </intent-filter>
         </receiver>
+
+        <!--########################################-->
+        <!--############## 锁屏闹钟部分 ##############-->
+        <!--############## 锁屏闹钟部分 ##############-->
         <activity
             android:name=".app_unlock_clock.UnlockCLockActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:launchMode="singleInstance" />
-        <!--<activity android:name=".PermissionsActivity"></activity>-->
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            <intent-filter>
+                <category android:name="android.intent.category.HOME"/>
+            </intent-filter>
+        </activity>
+        <receiver android:name=".app_unlock_clock.ScreenOnListener">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF" />
+            </intent-filter>
+        </receiver>
+        <!--############## 锁屏闹钟部分 ##############-->
+        <!--############## 锁屏闹钟部分 ##############-->
+        <!--########################################-->
+        <receiver android:name=".app_unlock_clock.YNAdminReceiver" >
+            <meta-data android:name="android.app.device_admin"
+            android:resource="@xml/yndeviceadmin"/>
+            <intent-filter >
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>

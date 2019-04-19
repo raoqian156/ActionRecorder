@@ -82,10 +82,10 @@ public abstract class BaseAdapter<VH extends BaseHolder, D> extends RecyclerView
         if (getDataItem(position) == null) {
             return;
         }
-        onBindingHolder(holder, position);
+        onBindingHolder(holder, position,getDataItem(position));
     }
 
-    public abstract void onBindingHolder(VH holder, int position);
+    public abstract void onBindingHolder(VH holder, int position,D data);
 
     public List<D> getData() {
         return this.mData;

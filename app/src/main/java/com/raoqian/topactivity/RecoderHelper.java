@@ -2,11 +2,9 @@ package com.raoqian.topactivity;
 
 import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
-import com.raoqian.topactivity.app_unlock_clock.UnlockCLockActivity;
 import com.raoqian.topactivity.bean.UseAppInfoBean;
 import com.raoqian.topactivity.utils.FileHelper;
 
@@ -22,14 +20,14 @@ import static com.raoqian.topactivity.utils.InfoController.getAppName;
 
 public class RecoderHelper {
 
-    private String pathToot = Environment.getExternalStorageDirectory().getPath() + "/topactivity/";
+    private String pathToot = Environment.getExternalStorageDirectory().getPath() + "/topactivity";
 
     private static RecoderHelper mHelper;
     private FileHelper mFileHelper;
     Application mContext;
 
     private RecoderHelper(Application context) {
-        mFileHelper = new FileHelper(context);
+        mFileHelper = new FileHelper();
         mContext = context;
     }
 
@@ -44,7 +42,7 @@ public class RecoderHelper {
         long timeZoom = System.currentTimeMillis();
         String pageName = ((ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE)).getRunningTasks(1).get(0).topActivity.getPackageName();
         try {
-            Log.e("InfoController", "40");
+            Log.d("InfoController", "40");
             saveText(new UseAppInfoBean(pageName, getAppName(mContext, pageName), timeZoom).toString() + "\n---start---\n");
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,7 +53,7 @@ public class RecoderHelper {
         long timeZoom = System.currentTimeMillis();
         String pageName = ((ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE)).getRunningTasks(1).get(0).topActivity.getPackageName();
         try {
-            Log.e("InfoController", "52");
+            Log.d("InfoController", "52");
             saveText(new UseAppInfoBean(pageName, getAppName(mContext, pageName), timeZoom).toString() + "\n---unlock---\n");
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,7 +64,7 @@ public class RecoderHelper {
         long timeZoom = System.currentTimeMillis();
         String pageName = ((ActivityManager) mContext.getSystemService(ACTIVITY_SERVICE)).getRunningTasks(1).get(0).topActivity.getPackageName();
         try {
-            Log.e("InfoController", "64");
+            Log.d("InfoController", "64");
             saveText(new UseAppInfoBean(pageName, getAppName(mContext, pageName), 0, timeZoom).toString() + "\n---stop----\n");
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,16 +74,23 @@ public class RecoderHelper {
     //写入信心到txt
     private void saveText(String str) throws IOException {
         String savePath = pathToot;
+        String filePath = savePath + File.separator + "haha.txt";
         File fileDirectory = new File(savePath);
+        Log.d("RecoderHelper", "save " + savePath);
         if (!fileDirectory.exists()) {
             fileDirectory.mkdirs();
         }
-        File files = new File(savePath + "haha.txt");
-        if (files.createNewFile()) {
-            Log.e("FileHelper", "记录文件已存在");
+        File files = new File(filePath);
+        if (files.exists()) {
+            Log.d("FileHelper", "记录文件已存在");
         } else {
-            Log.e("FileHelper", "记录文件已创建");
+            if (files.createNewFile()) {
+                Log.d("FileHelper", "记录文件创建成功");
+            } else {
+                Log.d("FileHelper", "记录文件已创建失败");
+            }
         }
-        mFileHelper.writeFileSdcardFile(savePath + "haha.txt", str);
+        Log.d("RecoderHelper", "写入内容 ： " + str);
+        mFileHelper.writeFileSdcardFile(filePath, str);
     }
 }

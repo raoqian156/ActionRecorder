@@ -69,6 +69,18 @@ public class UseAppInfoBean {
     public UseAppInfoBean() {
     }
 
+    public String getShowUsingTime() {
+        long second = (getEndTime() - getStartTime()) / 1000;
+        if (second > 60 * 60) {
+            return second / 60 / 60 + " 小时 " + second / 60 % 60 + " 分钟 ";
+        } else if (second > 60) {
+            return second / 60 + " 分钟 " + second % 60 + " 秒 ";
+        } else if (second > 0) {
+            return second + "秒";
+        }
+        return "不足1秒";
+    }
+
     public Long getId() {
         return id;
     }

@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -14,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
@@ -29,18 +27,14 @@ import static com.raoqian.topactivity.BaseApplication.serviceContext;
 
 public class WatchingService extends Service {
 
-    private Handler mHandler = new Handler();
     private ActivityManager mActivityManager;
     private String text = null;
     private Timer timer;
-    private NotificationManager mNotiManager;
-    private final int NOTIF_ID = 1;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mActivityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        mNotiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
     @Override

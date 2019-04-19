@@ -25,8 +25,9 @@ public class WatchingService21 extends AccessibilityService {
 
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             InfoController.dataInput(getApplication(), event.getPackageName() + "");
-            Log.e("WatchingService21", "event.getPackageName() = " + getAppName(WatchingService21.this,
+            Log.d("WatchingService21", "event.getPackageName() = " + getAppName(WatchingService21.this,
                     event.getPackageName().toString()));
+
         }
     }
 
@@ -37,14 +38,14 @@ public class WatchingService21 extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         serviceContext = this;
-        Log.e("WatchingService21", "41");
+        Log.d("WatchingService21", "41");
         super.onServiceConnected();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         serviceContext = null;
-        Log.e("WatchingService21", "53");
+        Log.d("WatchingService21", "53");
         return super.onUnbind(intent);
     }
 
@@ -59,13 +60,13 @@ public class WatchingService21 extends AccessibilityService {
             PackageManager packageManager = watchingService.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
             String result = packageInfo.applicationInfo.loadLabel(packageManager).toString();
-            Log.e("InfoController", "result = " + result);
+            Log.d("InfoController", "result = " + result);
             return result;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         } catch (Resources.NotFoundException e) {
             e.printStackTrace();
-            Log.e("InfoController", "无法获取" + packageName + "应用名");
+            Log.d("InfoController", "无法获取" + packageName + "应用名");
         }
         return null;
     }
