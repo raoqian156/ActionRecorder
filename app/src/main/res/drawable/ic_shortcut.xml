@@ -6,5 +6,5 @@
             <solid android:color="#f5f5f5" />
         </shape>
     </item>
-    <item android:gravity="center" android:drawable="@drawable/layers" />
+    <item android:gravity="center" android:drawable="@drawable/ic_notification" />
 </layer-list>

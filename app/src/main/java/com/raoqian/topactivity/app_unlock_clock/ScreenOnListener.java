@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -21,20 +20,20 @@ public class ScreenOnListener extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
-        if (action.equals(Intent.ACTION_SCREEN_OFF)) {
-            if (UnlockCLockActivity.class.getName().equals(getTopActivity(context))) {
-                loge(context, "未启用  -> " + getTopActivity(context));
-                Toast.makeText(context, "未启用", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            loge(context, "锁屏 " + getTopActivity(context) + "  " + UnlockCLockActivity.class.getName());
-            Intent toMain = new Intent(context, UnlockCLockActivity.class);
-            toMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            toMain.putExtra("from", TAG);
-            context.startActivity(toMain);
-        }
+//        String action = intent.getAction();
+//        if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+//            if (UnlockCLockActivity.class.getName().equals(getTopActivity(context))) {
+//                loge(context, "未启用  -> " + getTopActivity(context));
+//                Toast.makeText(context, "未启用", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            loge(context, "锁屏 " + getTopActivity(context) + "  " + UnlockCLockActivity.class.getName());
+//            Intent toMain = new Intent(context, UnlockCLockActivity.class);
+//            toMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            toMain.putExtra("from", TAG);
+//            context.startActivity(toMain);
+//        }
     }
 
     private void loge(Context s, String con) {

@@ -111,7 +111,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             public void run() {
                 Looper.prepare();
                 // TODO: 2017/7/19 会执行三次，不知道什么鬼，应该发个通知到主程序解决
-                Toast.makeText(mContext, "很抱歉,程序出现异常,请查看输出文档.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "很抱歉,程序出现异常,请查看输出文档 -> "+getFilePath(), Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
         }.start();
@@ -196,6 +196,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         }
         printWriter.close();
         String result = writer.toString();
+        Log.e("CrashHandler.Write", result);
         sb.append(result);
         try {
             long timestamp = System.currentTimeMillis();

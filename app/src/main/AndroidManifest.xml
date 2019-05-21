@@ -9,7 +9,8 @@
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <user-permission android:name="android.permission.DEVICE_POWER"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--<user-permission android:name="android.permission.DEVICE_POWER"/>-->
 
     <!-- 配置权限 -->
     <uses-permission android:name="android.permission.USES_POLICY_FORCE_LOCK" />
@@ -83,16 +84,22 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".IntentStartActivity" />
+
         <!--########################################-->
         <!--############## 锁屏闹钟部分 ##############-->
         <!--############## 锁屏闹钟部分 ##############-->
         <activity
             android:name=".app_unlock_clock.UnlockCLockActivity"
             android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-            <intent-filter>
-                <category android:name="android.intent.category.HOME"/>
-            </intent-filter>
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+            <!--<category android:name="android.intent.category.HOME"/>-->
+            <!--</intent-filter>-->
         </activity>
         <receiver android:name=".app_unlock_clock.ScreenOnListener">
             <intent-filter>
@@ -102,11 +109,12 @@
         <!--############## 锁屏闹钟部分 ##############-->
         <!--############## 锁屏闹钟部分 ##############-->
         <!--########################################-->
-        <receiver android:name=".app_unlock_clock.YNAdminReceiver" >
-            <meta-data android:name="android.app.device_admin"
-            android:resource="@xml/yndeviceadmin"/>
-            <intent-filter >
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+        <receiver android:name=".app_unlock_clock.YNAdminReceiver">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/yndeviceadmin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
 
         </receiver>

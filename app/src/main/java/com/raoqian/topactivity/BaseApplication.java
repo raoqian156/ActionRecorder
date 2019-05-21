@@ -6,6 +6,7 @@ import android.app.Service;
 import com.raoqian.topactivity.bean.DaoMaster;
 import com.raoqian.topactivity.bean.DaoSession;
 import com.raoqian.topactivity.utils.CrashHandler;
+import com.raoqian.topactivity.utils.ToastUtil;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -29,6 +30,7 @@ public class BaseApplication extends Application {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
         Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
+        ToastUtil.init(this);
     }
 
     public DaoSession getDaoSession() {

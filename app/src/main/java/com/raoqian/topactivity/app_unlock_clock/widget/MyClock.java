@@ -141,17 +141,19 @@ public class MyClock extends View {
         Log.e("MyClock", "onWindowFocusChanged.hasWindowFocus = " + hasWindowFocus);
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (isRunning) {
+            long drawMillisTime = System.currentTimeMillis()%1000;
+            postInvalidateDelayed(1000-drawMillisTime/100*100);
+        }
         drawCircle(canvas);
         drawRunningText(canvas);
         drawTextAndLine(canvas);
         canvas.drawCircle(mX, mY, 10, mPaint);
         drawTime(canvas);
-        if (isRunning) {
-            postInvalidateDelayed(200);
-        }
 
     }
 
@@ -176,6 +178,7 @@ public class MyClock extends View {
         mPaint.setColor(Color.WHITE);
         mPaint.setTextSize(60);
         canvas.drawText(time, mX - mPaint.measureText(time) / 2, mY, mPaint);
+        Log.e("TIME", System.currentTimeMillis() + " time = " + time);
     }
 
     private void drawTime(Canvas canvas) {

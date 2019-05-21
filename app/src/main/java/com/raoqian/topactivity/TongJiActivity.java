@@ -7,9 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raoqian.topactivity.bean.UseAppInfoBean;
 import com.raoqian.topactivity.utils.DateHelper;
+import com.raoqian.topactivity.utils.SPHelper;
 import com.raoqian.topactivity.utils.TimeParse;
 
 import java.util.List;
@@ -46,28 +48,40 @@ public class TongJiActivity extends Activity {
         mAdapter.setData(listData);
     }
 
-    class TestShowAdapter extends BaseAdapter<BaseHolder, UseAppInfoBean> {
+    class TestShowAdapter extends BaseAdapter<TestShowHolder, UseAppInfoBean> {
 
         public TestShowAdapter(Activity context) {
             super(context);
         }
 
         @Override
-        public BaseHolder onCreateHolder(ViewGroup parent, int viewType) {
+        public TestShowHolder onCreateHolder(ViewGroup parent, int viewType) {
             View view = getView(R.layout.recycler_item, parent);
             return new TestShowHolder(view);
         }
 
         @Override
-        public void onBindingHolder(BaseHolder holder, int position, UseAppInfoBean data) {
-            ((TestShowHolder) holder).mName.setText(data.getNickName());
-            ((TestShowHolder) holder).mStartTime.setText(TimeParse.stampToDate(data.getStartTime() + ""));
+        public void onBindingHolder(TestShowHolder holder, int position, UseAppInfoBean data) {
+            holder.mName.setText(data.getNickName());
+            holder.mStartTime.setText(TimeParse.stampToDate(data.getStartTime() + ""));
             if (data.getEndTime() > 0) {
-                ((TestShowHolder) holder).mEndTime.setText(TimeParse.stampToDate(data.getEndTime() + ""));
+                holder.mEndTime.setText(TimeParse.stampToDate(data.getEndTime() + ""));
             }
-            ((TestShowHolder) holder).mUsingTime.setText(data.getShowUsingTime());
+            holder.mUsingTime.setText(data.getShowUsingTime());
+            holder.pan.setOnLongClickListener(longClickListener);
+            holder.pan.setTag(data);
         }
     }
+
+    View.OnLongClickListener longClickListener = v -> {
+        UseAppInfoBean data = (UseAppInfoBean) v.getTag();
+        if(SPHelper.saveSelectPackageId(v.getContext(), data.getPageName())){
+            Toast.makeText(v.getContext(), "添加成功:"+data.getPageName(), Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(v.getContext(), "移除成功:"+data.getPageName(), Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    };
 
     class TestShowHolder extends BaseHolder {
 
@@ -75,6 +89,7 @@ public class TongJiActivity extends Activity {
         TextView mStartTime;
         TextView mEndTime;
         TextView mUsingTime;
+        View pan;
 
         public TestShowHolder(View itemView) {
             super(itemView);
@@ -82,6 +97,7 @@ public class TongJiActivity extends Activity {
             mStartTime = (TextView) itemView.findViewById(R.id.startTime);
             mEndTime = (TextView) itemView.findViewById(R.id.endTime);
             mUsingTime = (TextView) itemView.findViewById(R.id.usingTime);
+            pan = itemView.findViewById(R.id.view_pan);
         }
     }
 }

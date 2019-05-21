@@ -39,6 +39,7 @@ public class InfoController {
             helper.stop();
         }
         helper.start();
+        SPHelper.saveLastPackageId(application, pageName);
         application.getDaoSession().getUseAppInfoBeanDao().insert(new UseAppInfoBean(pageName, InfoController.getAppName(application, pageName), timeZoom));
     }
 

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
@@ -21,22 +20,75 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.raoqian.topactivity.IntentStartActivity;
 import com.raoqian.topactivity.R;
 import com.raoqian.topactivity.TongJiActivity;
 import com.raoqian.topactivity.service.ScreenOpenService;
 import com.raoqian.topactivity.utils.PermissionChecker;
+import com.raoqian.topactivity.utils.ToastUtil;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static com.raoqian.topactivity.utils.CrashHandler.TAG;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnLongClickListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_copy);
         openClock();
+        findViewById(R.id.test).setOnLongClickListener(this);
+        new Thread(() -> okhttpTest()).start();
+    }
+
+    private void okhttpTest() {
+        // 启动客户端类，主要有两种方法进行创建，new对象和Builder内部类实现实例化
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+
+// get请求
+// 通过Builder模式创建一个Request对象（即请求报文）
+// 这里可以设置请求基本参数：url地址，get请求，POST请求，请求头，cookie参数等
+        Request request = new Request.Builder()
+                .url("http://www.baidu.com")
+//                .header("User-Agent", "xxx.java")
+//                .addHeader("token", "xxx")
+                .get()
+                .build();
+//        // POST请求
+//// 表单形式上传
+//        RequestBody body = new FormBody.Builder().add("xxx","xxx").build();
+//// JSON参数形式，File对象上传
+//        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+//        RequestBody body = RequestBody.create(MediaType.parse("File/*"), file);
+//
+//        Request request = new Request.Builder()
+//                .post(body)
+//                .url(url)
+//                .header("User-Agent", "xxx.java")
+//                .addHeader("token", "xxx")
+//                .build();
+
+
+// 创建Call对象（Http请求） ，即连接Request和Response的桥梁
+// newCall方法将request封装成Call对象
+        Call call = client.newCall(request);
+        try {
+// Response即响应报文信息，包含返回状态码，响应头，响应体等
+            Response response = call.execute();
+// 这里深入一点，Call其实是一个接口，调用Call的execute()发送同步请求其实是调用了Realcall实现类的方法，Realcall从源码可以看出示一个Runable
+            Log.e("MainActivity", response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -66,26 +118,17 @@ public class MainActivity extends Activity {
             new AlertDialog.Builder(this)
                     .setMessage("安卓5.0以后需要获取权限\n请手动打开应用 " + getString(R.string.app_name) + " 无障碍服务")
                     .setPositiveButton("前去设置"
-                            , new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    PermissionChecker.check(MainActivity.this,
-                                            new PermissionChecker.CheckResultListener() {
-                                                @Override
-                                                public void onResult(boolean isAllGet, @NonNull List<String> failList) {
-                                                    if (isAllGet) {
-                                                        Intent intent = new Intent();
-                                                        intent.setAction("android.settings.ACCESSIBILITY_SETTINGS");
-                                                        startActivity(intent);
-                                                    } else {
-                                                        Toast.makeText(MainActivity.this, "必须获取文件读写", Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-                                            },
-                                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-                                }
-                            })
+                            , (dialog, which) -> PermissionChecker.check(MainActivity.this,
+                                    (isAllGet, failList) -> {
+                                        if (isAllGet) {
+                                            Intent intent = new Intent();
+                                            intent.setAction("android.settings.ACCESSIBILITY_SETTINGS");
+                                            startActivity(intent);
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "必须获取文件读写", Toast.LENGTH_LONG).show();
+                                        }
+                                    },
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
                     .create()
                     .show();
         } else {
@@ -149,7 +192,7 @@ public class MainActivity extends Activity {
     }
 
     private void toSet() {
-        String packagename=getPackageName();
+        String packagename = getPackageName();
         // 通过包名获取此APP详细信息，包括Activities、services、versioncode、name等等
         PackageInfo packageinfo = null;
         try {
@@ -191,13 +234,47 @@ public class MainActivity extends Activity {
         }
     }
 
+    ScreenOpenService screenBroadcastReceiver = new ScreenOpenService();
+
     private void openClock() {
-        ScreenOpenService screenBroadcastReceiver = new ScreenOpenService();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_USER_PRESENT);
         getApplicationContext().registerReceiver(screenBroadcastReceiver, filter);
+        ToastUtil.show("开启成功");
+    }
+
+    public void onCloseUnlock(View view) {
+//        try {
+        getApplicationContext().unregisterReceiver(screenBroadcastReceiver);
+        ToastUtil.show("锁屏闹钟已关闭");
+//        } catch (IllegalStateException e) {
+//            ToastUtil.show("锁屏闹钟尚未开启");
+//        }
+    }
+
+
+    int index = 0;
+
+    public void testClick(View passer) {
+        startActivity(new Intent(MainActivity.this, IntentStartActivity.class));
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        TextView view = (TextView) v;
+        try {
+            String con = view.getText().toString().trim();
+            con = con.substring(con.lastIndexOf("-") + 1);
+            Intent intent = new Intent();
+            intent.setAction(con);
+            startActivity(intent);
+            Log.e("MainActivity", con);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
 

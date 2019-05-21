@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2'
     }
 }
@@ -15,16 +15,13 @@ apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId 'com.raoqian.topactivity'
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 12
         versionName "1.4.1"
-        jackOptions {
-            enabled true
-        }
     }
     buildTypes {
         release {
@@ -48,6 +45,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:recyclerview-v7:25.3.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
 }
 
 uploadArchives.enabled = false
